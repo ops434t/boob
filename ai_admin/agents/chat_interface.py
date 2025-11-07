@@ -87,7 +87,13 @@ class ChatInterfaceAgent(Agent):
         }
         
     def _generate_response(self, message: str) -> str:
-        """Generate a response to user message"""
+        """
+        Generate a response to user message
+        
+        Note: This is a simple pattern-matching implementation for demonstration.
+        In a production system, this should be replaced with integration to
+        AI models (OpenAI, Anthropic, etc.) for more intelligent responses.
+        """
         message_lower = message.lower()
         
         # Simple pattern matching for demo purposes

@@ -1,7 +1,7 @@
 """Utility functions for AI Administrator"""
 
 import json
-from typing import Any, Dict
+from typing import Any, Dict, List
 from datetime import datetime
 
 
@@ -61,7 +61,7 @@ def safe_json_serialize(obj: Any) -> str:
     return json.dumps(obj, default=default_handler, indent=2)
 
 
-def validate_path(path: str, allowed_paths: list = None) -> bool:
+def validate_path(path: str, allowed_paths: List[str] = None) -> bool:
     """
     Validate if a path is safe to access
     
@@ -78,10 +78,22 @@ def validate_path(path: str, allowed_paths: list = None) -> bool:
     if not os.path.exists(path):
         return False
     
-    # If allowed_paths specified, check if path starts with any of them
+    # Resolve symlinks and normalize the path to prevent traversal attacks
+    real_path = os.path.realpath(path)
+    
+    # If allowed_paths specified, check if path is within allowed directories
     if allowed_paths:
-        abs_path = os.path.abspath(path)
-        return any(abs_path.startswith(allowed) for allowed in allowed_paths)
+        for allowed in allowed_paths:
+            allowed_real = os.path.realpath(allowed)
+            try:
+                # Check if real_path is within allowed_real using commonpath
+                common = os.path.commonpath([real_path, allowed_real])
+                if common == allowed_real:
+                    return True
+            except (ValueError, TypeError):
+                # Different drives on Windows or other path issues
+                continue
+        return False
     
     return True
 

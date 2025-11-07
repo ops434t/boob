@@ -11,11 +11,12 @@ from ..core.agent import Agent, AgentResponse
 class TaskAutomationAgent(Agent):
     """Agent for automating system administration tasks"""
     
-    def __init__(self):
+    def __init__(self, max_processes: int = 50):
         super().__init__(
             name="task_automation",
             description="Automates common system tasks like file operations and process management"
         )
+        self.max_processes = max_processes
         self.safe_commands = {
             "list_processes": self._list_processes,
             "list_directory": self._list_directory,
@@ -68,7 +69,7 @@ class TaskAutomationAgent(Agent):
                 processes.append(proc.info)
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
-        return processes[:50]  # Limit to top 50 processes
+        return processes[:self.max_processes]
         
     def _list_directory(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """List directory contents"""

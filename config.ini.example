@@ -1,0 +1,28 @@
+# AI Administrator Configuration
+
+# Agent Settings
+[agents]
+system_monitor_enabled = true
+task_automation_enabled = true
+chat_interface_enabled = true
+
+# System Monitoring Settings
+[monitoring]
+cpu_check_interval = 60  # seconds
+memory_threshold = 80    # percent
+disk_threshold = 90      # percent
+
+# Chat Settings
+[chat]
+max_history = 100
+save_history = false
+
+# Automation Settings
+[automation]
+safe_mode = true
+allowed_paths = ["/home", "/tmp"]
+
+# Logging
+[logging]
+level = "INFO"
+log_file = "ai_admin.log"
